@@ -28,7 +28,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexViewHolder> implements Filterable {
+public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexViewHolder>
+        implements Filterable {
     public static class PokedexViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout containerView;
         private TextView textView;
@@ -60,7 +61,7 @@ public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexV
     }
 
     private List<Pokemon> pokemon = new ArrayList<>();
-    private List<Pokemon> filtered = new ArrayList<>();
+    private List<Pokemon> filtered = pokemon;
     private RequestQueue requestQueue;
 
     PokedexAdapter(Context context) {
@@ -71,19 +72,24 @@ public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexV
     private class PokemonFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            Log.d("Pokedex", "Filter constraint: " + constraint.toString());
             FilterResults results = new FilterResults();
             List<Pokemon> filteredPokemon = new ArrayList<>();
+
             for (Pokemon poke : pokemon) {
-                if (poke.getName().toLowerCase().matches(constraint.toString())) {
+                if (poke.getName().toLowerCase().contains(constraint.toString().toLowerCase())) {
                     filteredPokemon.add(poke);
                 }
             }
             results.values = filteredPokemon;
             results.count = filteredPokemon.size();
+            Log.d("Pokedex", "Filter size: " + String.format("%d", results.count));
+
             return results;
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filtered = (List<Pokemon>) results.values;
             notifyDataSetChanged();
