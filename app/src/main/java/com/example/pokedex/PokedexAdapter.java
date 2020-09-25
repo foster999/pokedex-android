@@ -60,11 +60,34 @@ public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexV
     }
 
     private List<Pokemon> pokemon = new ArrayList<>();
+    private List<Pokemon> filtered = new ArrayList<>();
     private RequestQueue requestQueue;
 
     PokedexAdapter(Context context) {
         requestQueue = Volley.newRequestQueue(context);
         loadPokemon();
+    }
+
+    private class PokemonFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            List<Pokemon> filteredPokemon = new ArrayList<>();
+            for (Pokemon poke : pokemon) {
+                if (poke.getName().toLowerCase().matches(constraint.toString())) {
+                    filteredPokemon.add(poke);
+                }
+            }
+            results.values = filteredPokemon;
+            results.count = filteredPokemon.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filtered = (List<Pokemon>) results.values;
+            notifyDataSetChanged();
+        }
     }
 
     public void loadPokemon() {
@@ -111,18 +134,18 @@ public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexV
 
     @Override
     public void onBindViewHolder(@NonNull PokedexViewHolder holder, int position) {
-        Pokemon current = pokemon.get(position);
+        Pokemon current = filtered.get(position);
         holder.textView.setText(current.getName());
         holder.containerView.setTag(current);  // Can be anything to provide access from holder
     }
 
     @Override
     public int getItemCount() {
-        return pokemon.size();
+        return filtered.size();
     }
 
     @Override
     public Filter getFilter() {
-        return new PokedexFilter();
+        return new PokemonFilter();
     }
 }
