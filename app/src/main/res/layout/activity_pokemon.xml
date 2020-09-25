@@ -1,37 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".PokemonActivity">
+
+    <Button
+        android:id="@+id/catch_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="toggleCatch"
+        android:text="@string/catch_button_name" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pokemon_name"
         android:textAlignment="center"
-        android:textSize="18dp"
-        android:paddingTop="10dp" />
+        android:paddingTop="10sp"
+        android:textSize="18sp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pokemon_number"
         android:textAlignment="center"
-        android:textSize="16dp"
-        android:paddingTop="5dp" />
+        android:paddingTop="5sp"
+        android:textSize="16sp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pokemon_type_1"
         android:textAlignment="center"
-        android:textSize="16dp"
-        android:paddingTop="5dp" />
+        android:paddingTop="5sp"
+        android:textSize="16sp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pokemon_type_2"
         android:textAlignment="center"
-        android:textSize="16dp"
-        android:paddingTop="5dp" />
+        android:paddingTop="5sp"
+        android:textSize="16sp" />
 </LinearLayout>

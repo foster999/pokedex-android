@@ -1,10 +1,14 @@
 package com.example.pokedex;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,14 +21,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 public class PokemonActivity extends AppCompatActivity {
     private TextView nameTextView;
     private TextView numberTextView;
     private TextView type1TextView;
     private TextView type2TextView;
+    private TextView catchButtonView;
     private String url;
     private RequestQueue requestQueue;
+    private boolean caught;
 
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +49,10 @@ public class PokemonActivity extends AppCompatActivity {
         numberTextView = findViewById(R.id.pokemon_number);
         type1TextView = findViewById(R.id.pokemon_type_1);
         type2TextView = findViewById(R.id.pokemon_type_2);
+        catchButtonView = findViewById(R.id.catch_button);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
 
         load();
     }
@@ -48,13 +64,19 @@ public class PokemonActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     JSONArray typeEntries = response.getJSONArray("types");
-                    nameTextView.setText(response.getString("name"));
-                    numberTextView.setText(String.format("#%03d", response.getInt("id")));
+                    String name = Util.capitalize(response.getString("name"));
+                    if (preferences.contains(name)) {
+                        caught = true;
+                    }
+                    nameTextView.setText(name);
+                    setCaught();
+                    numberTextView.setText(String.format(Locale.getDefault(), "#%03d", response.getInt("id")));
 
-                    for (int i = 0; i < typeEntries.length(); i ++) {
+
+                    for (int i = 0; i < typeEntries.length(); i++) {
                         JSONObject typeEntry = typeEntries.getJSONObject(i);
                         int slot = typeEntry.getInt("slot");
-                        String type = typeEntry.getJSONObject("type").getString("name");
+                        String type = Util.capitalize(typeEntry.getJSONObject("type").getString("name"));
 
                         if (slot == 1) {
                             type1TextView.setText(type);
@@ -68,7 +90,7 @@ public class PokemonActivity extends AppCompatActivity {
                 }
 
             }
-        }, new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Pokedex", "Pokemon detail error");
@@ -77,5 +99,23 @@ public class PokemonActivity extends AppCompatActivity {
         );
 
         requestQueue.add(request);
+    }
+
+    public void toggleCatch(View view) {
+        caught = !caught;
+        setCaught();
+
+        editor.apply();
+    }
+
+    private void setCaught() {
+        String name = nameTextView.getText().toString();
+        if (caught) {
+            catchButtonView.setText(R.string.release_button_name);
+            editor.putBoolean(name, true);
+        } else {
+            catchButtonView.setText(R.string.catch_button_name);
+            editor.remove(name);
+        }
     }
 }

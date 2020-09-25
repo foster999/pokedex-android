@@ -13,7 +13,7 @@ public class Pokemon {
         return name;
     }
 
-    public String  getUrl() {
+    public String getUrl() {
         return url;
     }
 }
