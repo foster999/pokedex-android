@@ -13,6 +13,20 @@
         android:onClick="toggleCatch"
         android:text="@string/catch_button_name" />
 
+    <ImageView
+        android:id="@+id/pokemon_sprite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@+id/pokemon_name" />
+
+    <TextView
+        android:id="@+id/pokemon_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5sp"
+        android:textAlignment="center"
+        android:textSize="12sp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,15 +38,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/pokemon_number"
-        android:textAlignment="center"
-        android:paddingTop="5sp"
-        android:textSize="16sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/pokemon_type_1"
+        android:visibility="gone"
         android:textAlignment="center"
         android:paddingTop="5sp"
         android:textSize="16sp" />
@@ -41,7 +48,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pokemon_type_2"
+        android:visibility="gone"
         android:textAlignment="center"
         android:paddingTop="5sp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/pokemon_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxWidth="40sp"
+        android:paddingTop="15sp"
+        android:textAlignment="center"
         android:textSize="16sp" />
 </LinearLayout>

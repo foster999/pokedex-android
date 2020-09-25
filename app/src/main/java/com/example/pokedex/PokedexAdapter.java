@@ -1,7 +1,10 @@
 package com.example.pokedex;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,22 +53,18 @@ public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexV
                 }
             });
         }
-
-        public LinearLayout getContainerView() {
-            return containerView;
-        }
-
-        public TextView getTextView() {
-            return textView;
-        }
     }
 
     private List<Pokemon> pokemon = new ArrayList<>();
     private List<Pokemon> filtered = pokemon;
     private RequestQueue requestQueue;
 
+    private SharedPreferences preferences;
+
+    @SuppressLint("CommitPrefEdits")
     PokedexAdapter(Context context) {
         requestQueue = Volley.newRequestQueue(context);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         loadPokemon();
     }
 
@@ -105,9 +104,9 @@ public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexV
                     JSONArray results = response.getJSONArray("results");
                     for (int i = 0; i < results.length(); i++) {
                         JSONObject result = results.getJSONObject(i);
-                        String name = result.getString("name");
+                        String name = Util.capitalize(result.getString("name"));
                         pokemon.add(new Pokemon(
-                                        Util.capitalize(name),
+                                        name,
                                         result.getString("url")
                                 )
                         );
@@ -142,7 +141,13 @@ public class PokedexAdapter extends RecyclerView.Adapter<PokedexAdapter.PokedexV
     @Override
     public void onBindViewHolder(@NonNull PokedexViewHolder holder, int position) {
         Pokemon current = filtered.get(position);
+
         holder.textView.setText(current.getName());
+        if (preferences.contains(current.getName())) {
+            holder.textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pokeball, 0);
+        } else {
+            holder.textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
         holder.containerView.setTag(current);  // Can be anything to provide access from holder
     }
 
