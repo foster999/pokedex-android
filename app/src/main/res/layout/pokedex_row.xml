@@ -7,11 +7,12 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
-    android:padding="13dp">
+    android:padding="10sp">
 
     <TextView
         android:id="@+id/pokedex_row_text_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="30sp"
+        android:gravity="center_vertical"/>
 
 </LinearLayout>

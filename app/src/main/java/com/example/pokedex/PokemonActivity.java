@@ -172,7 +172,7 @@ public class PokemonActivity extends AppCompatActivity {
         }
     }
 
-    private static class DownloadSpriteTask extends AsyncTask<String, Void, Bitmap> {
+    private class DownloadSpriteTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... strings) {
             try {
